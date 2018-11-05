@@ -275,13 +275,13 @@ bool TestHelper::clearAndEnterText(QQuickItem *textField, const QString &text)
     return true;
 }
 
-bool TestHelper::changeCanvasSize(int width, int height)
+bool TestHelper::changeCanvasSize(int width, int height, CloseDialogFlag closeDialog)
 {
     // Open the canvas size popup.
     mouseEventOnCentre(canvasSizeButton, MouseClick);
     const QObject *canvasSizePopup = findPopupFromTypeName("CanvasSizePopup");
     VERIFY(canvasSizePopup);
-    VERIFY(canvasSizePopup->property("visible").toBool());
+    TRY_VERIFY2(canvasSizePopup->property("opened").toBool(), "Failed to open CanvasSizePopup");
 
     // Change the values and then cancel.
     // TODO: use actual input events...
@@ -299,35 +299,43 @@ bool TestHelper::changeCanvasSize(int width, int height)
     VERIFY(heightSpinBox->setProperty("value", originalHeightSpinBoxValue - 1));
     VERIFY(heightSpinBox->property("value").toInt() == originalHeightSpinBoxValue - 1);
 
+    qDebug() << "cancelling via test";
     QQuickItem *cancelButton = canvasSizePopup->findChild<QQuickItem*>("canvasSizePopupCancelButton");
     VERIFY(cancelButton);
     mouseEventOnCentre(cancelButton, MouseClick);
-    VERIFY(!canvasSizePopup->property("visible").toBool());
+    TRY_VERIFY2(!canvasSizePopup->property("visible").toBool(), "Failed to cancel CanvasSizePopup");
     VERIFY(project->size().width() == originalWidthSpinBoxValue);
     VERIFY(project->size().height() == originalHeightSpinBoxValue);
+    VERIFY(canvas->hasActiveFocus());
 
+    qDebug() << "opening via test";
     // Open the popup again.
     mouseEventOnCentre(canvasSizeButton, MouseClick);
     VERIFY(canvasSizePopup);
-    VERIFY(canvasSizePopup->property("visible").toBool());
+    TRY_VERIFY2(canvasSizePopup->property("opened").toBool(), "Failed to reopen CanvasSizePopup");
     // The old values should be restored.
     VERIFY(widthSpinBox->property("value").toInt() == originalWidthSpinBoxValue);
     VERIFY(heightSpinBox->property("value").toInt() == originalHeightSpinBoxValue);
+    VERIFY(widthSpinBox->hasActiveFocus());
 
-    // Change the values and then press OK.
+    // Change the values.
     VERIFY(widthSpinBox->setProperty("value", width));
     VERIFY(widthSpinBox->property("value").toInt() == width);
     VERIFY(heightSpinBox->setProperty("value", height));
     VERIFY(heightSpinBox->property("value").toInt() == height);
 
-    QQuickItem *okButton = canvasSizePopup->findChild<QQuickItem*>("canvasSizePopupOkButton");
-    VERIFY(okButton);
-    mouseEventOnCentre(okButton, MouseClick);
-    VERIFY(!canvasSizePopup->property("visible").toBool());
-    VERIFY(project->size().width() == width);
-    VERIFY(project->size().height() == height);
-    VERIFY(widthSpinBox->property("value").toInt() == width);
-    VERIFY(heightSpinBox->property("value").toInt() == height);
+    if (closeDialog == CloseDialog) {
+        // Press OK to close the dialog.
+        QQuickItem *okButton = canvasSizePopup->findChild<QQuickItem*>("canvasSizePopupOkButton");
+        VERIFY(okButton);
+        mouseEventOnCentre(okButton, MouseClick);
+        TRY_VERIFY2(!canvasSizePopup->property("visible").toBool(), "Failed to accept CanvasSizePopup");
+        VERIFY(project->size().width() == width);
+        VERIFY(project->size().height() == height);
+        VERIFY(widthSpinBox->property("value").toInt() == width);
+        VERIFY(heightSpinBox->property("value").toInt() == height);
+        VERIFY(canvas->hasActiveFocus());
+    }
 
     return true;
 }
@@ -1867,6 +1875,16 @@ bool TestHelper::togglePanel(const QString &panelObjectName, bool expanded)
                     .arg(panelObjectName).arg(panel->height())));
         }
     }
+    return true;
+}
+
+bool TestHelper::togglePanels(const QStringList &panelObjectNames, bool expanded)
+{
+    for (const QString &panelObjectName : qAsConst(panelObjectNames)) {
+        if (!togglePanel(panelObjectName, expanded))
+            return false;
+    }
+
     return true;
 }
 

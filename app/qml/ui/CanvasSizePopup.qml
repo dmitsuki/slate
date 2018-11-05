@@ -32,15 +32,20 @@ Dialog {
     focus: true
 
     property Project project
+    property ImageCanvas canvas
     readonly property bool isTilesetProject: project && project.type === Project.TilesetType
 
-    onVisibleChanged: {
-        if (visible && project) {
-            widthSpinBox.value = project.size.width;
-            heightSpinBox.value = project.size.height;
-            widthSpinBox.contentItem.forceActiveFocus();
+    onAboutToShow: {
+        print("aboutToShoow")
+        if (project) {
+            widthSpinBox.value = project.size.width
+            heightSpinBox.value = project.size.height
+            print("forcing focus")
+            widthSpinBox.contentItem.forceActiveFocus()
         }
     }
+
+    onClosed: canvas.forceActiveFocus()
 
     contentItem: ColumnLayout {
         Item {
