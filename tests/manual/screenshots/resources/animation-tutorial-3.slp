@@ -1,6 +1,16 @@
 {
     "project": {
-        "currentLayerIndex": 0,
+        "animationPlayback": {
+            "fps": 8,
+            "frameCount": 6,
+            "frameHeight": 38,
+            "frameWidth": 36,
+            "frameX": 0,
+            "frameY": 0,
+            "loop": true,
+            "scale": 4
+        },
+        "currentLayerIndex": 1,
         "firstPane": {
             "offsetX": 40,
             "offsetY": 189,
@@ -34,6 +44,7 @@
                 "position": 180
             }
         ],
+        "hasUsedAnimation": true,
         "lastFillToolUsed": "FillTool",
         "layerListViewContentY": 0,
         "layers": [
@@ -44,13 +55,13 @@
                 "visible": true
             },
             {
-                "imageData": "iVBORw0KGgoAAAANSUhEUgAAANgAAAAmCAYAAACmuFWEAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAb0lEQVR4nO3XsQ2AIBBAUVjKPaydwImcwNo9nMqWmJAQCAXwXnfNdT+XCwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGEFsXXPezpfN57G/rTphFVWD/qHLExuqKAyuNKkdsrMgFg478YNDRB79QFAZusRQbAAAAAElFTkSuQmCC",
+                "imageData": "iVBORw0KGgoAAAANSUhEUgAAANgAAAAmCAYAAACmuFWEAAAACXBIWXMAAAsTAAALEwEAmpwYAAABA0lEQVR4nO3XsU3DQBSA4cdSdGxAgdM6DIBimCEzgCMGIG5jCjagY6q0J4uzjtjYAn1f96TT0zW/ThcBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf8DV1AWvXX+dzg919TV15xTPb+836fx0f/e51l0iIg5d36Tzrq7ate4SEfHS9ft0fqyr/fcnl9EeT7t0brabw1p3iYhoj6fbdG62m48p+y4KbBhVzlKxDaPKWSq2YVQ5S8U2jCpnqdiGUeUsFdswqpxLYisOrDSqnLljK40qZ+7YSqPKmTu20qhy5o6tNKqcuWMrjSqnNDYv2C/wgo3zgv2AP9g4f7Bx//0Pdgaz33gGqMzuHQAAAABJRU5ErkJggg==",
                 "name": "shadow",
                 "opacity": 1,
                 "visible": true
             },
             {
-                "imageData": "iVBORw0KGgoAAAANSUhEUgAAANgAAAAmCAYAAACmuFWEAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA30lEQVR4nO3aPQrCMBiAYRXFgzl4DhEcPESP4SBIr+Dq4OboBTxNHUr8AVuaVPAnzzM3aZcXwtcMBgAAAAAAAAAA/JFif67K06X69HfAtxn13aDYn29hiQye9QrsMa5AZHCXHNiruAKRQS0psLa4ApFBQmBd4gpERu6iAouJKxAZOescWEpcgcjI1TDm4eX20BjKdDJuXLdZzKLeA/8i6oi4W82jQxEXOYsecsREJi5ylzSm7xKZuKDHj+a2yMQFtV5XpV5FJi54s+X2UK3Lo1E8AAAAAAAAAAAAAAC/4QqcdEfSmZlYdgAAAABJRU5ErkJggg==",
+                "imageData": "iVBORw0KGgoAAAANSUhEUgAAANgAAAAmCAYAAACmuFWEAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB5ElEQVR4nO3aO07DQBRG4QtKlIqODVCxCToK1hFFomARWQaFJZQtpHVBR5kNsBpT3WBFnvE8PA/b56tJcpjMLxEREQAAAAAAAAAAAAAAACzI8XzpTj+/XekOoDb3sU9wPF+uw6plZAweMaa8P1ED649Llb7YDH5+ajqfqe9P8MCGxqVKHRaDd7PkCz1Vi4ptChqYbVwq92ExeDdLv9BTtqiYJu+BuYxL5TosBu9mDRd66hYV2uQ1MJ9xqdSHxeDdrOVCp2hRIU3OAwsZl0p1WAzezZoudKoW5dt05/PDh6Y1PvluuzE+7nP/6vU6LsYO5+nxwfr4/ctz1iZbT4oWZWoy9ZRosfWI5H+vxnpE3Ju8w00jMw0sxbjGWmw9Igx+rGfOF9pHjvsTFD0UNhSUcly2FlOPCINXS73QvlLfn+Dw27DboBzjMrUM9YgweJcekXlf6BAp70/wP5q/3t+ML5ZzXGMtKleTS4tK3eTTompqquk9C22J+qrUUFjucdlaFIN3U1NTTe9ZTEv0l337YaXGNdSiGPy6LnSMFPen6CBSOTRtt9tuig9eW0T+/6Yv2dT/rNH/jFFDUw3no6a8P8V/mTVg8HY1nQ8Q7dC03cfpu4pv0wMAAAAAAAAAAAAAAAB5/AG0mKT8G/rNrwAAAABJRU5ErkJggg==",
                 "name": "object",
                 "opacity": 1,
                 "visible": true
@@ -78,6 +89,7 @@
                     "name": ""
                 }
             ]
-        }
+        },
+        "usingAnimation": true
     }
 }

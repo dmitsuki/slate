@@ -590,7 +590,7 @@ void tst_App::animationPlayback()
 
     QObject *animationSettingsPopup = findPopupFromTypeName("AnimationSettingsPopup");
     QVERIFY(animationSettingsPopup);
-    QTRY_COMPARE(animationSettingsPopup->property("visible").toBool(), true);
+    QTRY_COMPARE(animationSettingsPopup->property("opened").toBool(), true);
 
     // Increase FPS.
     QQuickItem *animationFpsSpinBox = window->findChild<QQuickItem*>("animationFpsSpinBox");

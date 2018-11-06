@@ -29,3 +29,21 @@ We're going to recreate the following guides:
 ![Guides](https://github.com/mitchcurtis/slate/blob/animation-tutorial/doc/images/slate-animation-tutorial-2.2.png)
 
 To drag a vertical guide onto the canvas, click on the ruler on the left side of the screen and drag outwards. Repeat this step until there are five vertical guides on the canvas at 36 pixel intervals. Then, drag a horizontal guide onto the canvas so that we have some reference for vertical movement in our animation.
+
+Now we'll set up the animation. To enable animation playback for a project, select Animation > Animation Playback. The Animation panel will then become visible. Click on the settings icon in the top right of the panel to open the animation settings dialog. Input the following values:
+
+![Guides](https://github.com/mitchcurtis/slate/blob/animation-tutorial/doc/images/slate-animation-tutorial-3.png)
+
+Together, the "Frame X" and "Frame Y" form the starting point of the animation. We set them both to 0 here, but in a project with several different animations (such as a character in an idle animation, attacking animation, etc.), they would be set to different values to test out the different animations.
+
+The "Frame Width" and "Frame Height" fields store the size of each frame.
+
+The "Frame Count" controls how many frames are in this animation.
+
+The "FPS", or Frames Per Second, controls the speed at which the animation plays.
+
+The "Preview Scale" determines how large the animation preview is.
+
+Click OK to confirm the settings. Hit the play button to see the animation:
+
+![Animation](https://github.com/mitchcurtis/slate/blob/animation-tutorial/doc/images/slate-animation-tutorial.gif)

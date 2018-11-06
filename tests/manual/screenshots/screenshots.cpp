@@ -262,7 +262,7 @@ void tst_Screenshots::animation()
 
     // Copy the project files from resources into our temporary directory.
     QStringList projectFileNames;
-    for (int i = 1; i <= 5; ++i) {
+    for (int i = 1; i <= 3; ++i) {
         const QString projectFileName = QString::fromLatin1("animation-tutorial-%1.slp").arg(i);
         projectFileNames.append(projectFileName);
         QVERIFY2(copyFileFromResourcesToTempProjectDir(projectFileName), failureMessage);
@@ -332,6 +332,8 @@ void tst_Screenshots::animation()
             QString::fromLatin1("When dragging guide %1: ").arg(i) + QString::fromLatin1(failureMessage)));
     }
 
+    QVERIFY2(addNewGuide(Qt::Horizontal, 25), failureMessage);
+
     screenshotPath = QLatin1String("slate-animation-tutorial-2.2.png");
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
 
@@ -342,10 +344,26 @@ void tst_Screenshots::animation()
     projectPath = QDir(tempProjectDir->path()).absoluteFilePath(projectFileNames.at(2));
     QVERIFY2(loadProject(QUrl::fromLocalFile(projectPath)), failureMessage);
 
+    panelsToExpand << QLatin1String("animationPanel");
     QVERIFY2(togglePanels(panelsToExpand, true), failureMessage);
+
+    // Open the settings popup.
+    QQuickItem *animationPanelSettingsToolButton = window->findChild<QQuickItem*>("animationPanelSettingsToolButton");
+    QVERIFY(animationPanelSettingsToolButton);
+    mouseEventOnCentre(animationPanelSettingsToolButton, MouseClick);
+
+    QObject *animationSettingsPopup = findPopupFromTypeName("AnimationSettingsPopup");
+    QVERIFY(animationSettingsPopup);
+    QTRY_COMPARE(animationSettingsPopup->property("opened").toBool(), true);
 
     screenshotPath = QLatin1String("slate-animation-tutorial-3.png");
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
+
+    // Close it.
+    QQuickItem *cancelButton = findDialogButtonFromText(animationSettingsPopup, "Cancel");
+    QVERIFY(cancelButton);
+    mouseEventOnCentre(cancelButton, MouseClick);
+    QTRY_COMPARE(animationSettingsPopup->property("visible").toBool(), false);
 
     QVERIFY2(triggerCloseProject(), failureMessage);
 }
