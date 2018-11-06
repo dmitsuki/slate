@@ -889,17 +889,17 @@ bool TestHelper::addNewGuide(Qt::Orientation orientation, int position)
     setCursorPosInPixels(pressPos);
     QTest::mouseMove(window, cursorWindowPos);
     VERIFY(!canvas->pressedRuler());
-QTest::qWait(1000);
+
     QTest::mousePress(window, Qt::LeftButton, Qt::NoModifier, cursorWindowPos);
     VERIFY(canvas->pressedRuler());
-QTest::qWait(1000);
+
     // Do the actual moving onto the canvas.
     const QPoint releasePos(
         horizontal ? 50 : rulerThickness + position,
         horizontal ? rulerThickness + position : 50);
     setCursorPosInPixels(releasePos);
     QTest::mouseMove(window, cursorWindowPos);
-QTest::qWait(1000);
+
     // Now it should be visible on the canvas.
     VERIFY(imageGrabber.requestImage(canvas));
     TRY_VERIFY(imageGrabber.isReady());
@@ -907,7 +907,7 @@ QTest::qWait(1000);
     VERIFY(grabWithGuide.pixelColor(releasePos.x(), releasePos.y()) == QColor(Qt::cyan));
 
     QTest::mouseRelease(window, Qt::LeftButton, Qt::NoModifier, cursorWindowPos);
-QTest::qWait(1000);
+
     VERIFY(!canvas->pressedRuler());
     VERIFY2(project->guides().size() == originalGuideCount + 1, qPrintable(QString::fromLatin1(
         "Expected %1 guide(s), but got %2").arg(originalGuideCount + 1).arg(project->guides().size())));
@@ -1394,16 +1394,8 @@ bool TestHelper::createNewProject(Project::Type projectType, const QVariantMap &
         return false;
 
     // Check that we get prompted to discard any changes.
-    if (project && project->hasUnsavedChanges()) {
-        const QObject *discardChangesDialog = window->contentItem()->findChild<QObject*>("discardChangesDialog");
-        VERIFY(discardChangesDialog);
-        VERIFY(discardChangesDialog->property("visible").toBool());
-
-        QQuickItem *discardChangesButton = findDialogButtonFromObjectName(discardChangesDialog, "discardChangesDialogButton");
-        VERIFY(discardChangesButton);
-        mouseEventOnCentre(discardChangesButton, MouseClick);
-        VERIFY(!discardChangesDialog->property("visible").toBool());
-    }
+    if (project && project->hasUnsavedChanges())
+        discardChanges();
 
     // Ensure that the new project popup is visible.
     const QObject *newProjectPopup = findPopupFromTypeName("NewProjectPopup");
@@ -1820,6 +1812,19 @@ bool TestHelper::updateVariables(bool isNewProject, Project::Type projectType)
     if (!collapseAllPanels())
         return false;
 
+    return true;
+}
+
+bool TestHelper::discardChanges()
+{
+    const QObject *discardChangesDialog = window->contentItem()->findChild<QObject*>("discardChangesDialog");
+    VERIFY(discardChangesDialog);
+    TRY_VERIFY(discardChangesDialog->property("opened").toBool());
+
+    QQuickItem *discardChangesButton = findDialogButtonFromObjectName(discardChangesDialog, "discardChangesDialogButton");
+    VERIFY(discardChangesButton);
+    mouseEventOnCentre(discardChangesButton, MouseClick);
+    TRY_VERIFY(!discardChangesDialog->property("visible").toBool());
     return true;
 }
 

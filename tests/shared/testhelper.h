@@ -191,6 +191,7 @@ protected:
         bool transparentImageBackground = false);
     Q_REQUIRED_RESULT bool loadProject(const QUrl &url, const QString &expectedFailureMessage = QString());
     Q_REQUIRED_RESULT bool updateVariables(bool isNewProject, Project::Type newProjectType);
+    Q_REQUIRED_RESULT bool discardChanges();
 
     Q_REQUIRED_RESULT bool copyFileFromResourcesToTempProjectDir(const QString &baseName);
     Q_REQUIRED_RESULT bool setupTempTilesetProjectDir();

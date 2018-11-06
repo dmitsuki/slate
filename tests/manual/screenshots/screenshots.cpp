@@ -328,7 +328,6 @@ void tst_Screenshots::animation()
     QCOMPARE(app.settings()->areRulersVisible(), true);
 
     for (int i = 1; i <= 5; ++i) {
-//    for (int i = 4; i <= 4; ++i) {
         QVERIFY2(addNewGuide(Qt::Vertical, i * 36), qPrintable(
             QString::fromLatin1("When dragging guide %1: ").arg(i) + QString::fromLatin1(failureMessage)));
     }
@@ -337,6 +336,7 @@ void tst_Screenshots::animation()
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
 
     QVERIFY2(triggerCloseProject(), failureMessage);
+    QVERIFY2(discardChanges(), failureMessage);
 
     // Chapter 3.
     projectPath = QDir(tempProjectDir->path()).absoluteFilePath(projectFileNames.at(2));
