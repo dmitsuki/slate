@@ -280,24 +280,35 @@ void tst_Screenshots::animation()
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
 
     // Oepn the canvas size dialog.
-    qDebug() << "#1";
     QVERIFY2(changeCanvasSize(216, 38, DoNotCloseDialog), failureMessage);
-    qDebug() << "#2";
     // Take a screenshot of it.
     auto grabResult = window->contentItem()->grabToImage();
     QTRY_VERIFY(!grabResult->image().isNull());
     screenshotPath = QLatin1String("slate-animation-tutorial-1.1.png");
     QVERIFY(grabResult->image().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
-    qDebug() << "#3";
     // Close it.
     QTest::keyClick(window, Qt::Key_Escape, Qt::NoModifier, 100);
-    qDebug() << "#4";
+    const QObject *canvasSizePopup = findPopupFromTypeName("CanvasSizePopup");
+    QVERIFY(canvasSizePopup);
+    QTRY_VERIFY2(!canvasSizePopup->property("visible").toBool(), "Failed to cancel CanvasSizePopup");
+
+    // Move the mouse away to avoid getting the tooltip in the next screenshot.
+    QQuickItem *toolBar = window->findChild<QQuickItem*>("toolBar");
+    QVERIFY(toolBar);
+    setCursorPosInPixels(QPoint(10, toolBar->height() + 100));
+    QTest::mouseMove(window, cursorWindowPos);
+    QQuickItem *canvasSizeButton = window->findChild<QQuickItem*>("canvasSizeButton");
+    QVERIFY(canvasSizeButton);
+    // Can't seem to ensure that the tooltip is hidden using QQmlProperty, so we do it all hacky-like for now.
+    QTest::qWait(500);
 
     QVERIFY2(triggerCloseProject(), failureMessage);
 
     // Chapter 2.
     projectPath = QDir(tempProjectDir->path()).absoluteFilePath(projectFileNames.at(1));
     QVERIFY2(loadProject(QUrl::fromLocalFile(projectPath)), failureMessage);
+
+    QVERIFY2(togglePanels(panelsToExpand, true), failureMessage);
 
     screenshotPath = QLatin1String("slate-animation-tutorial-2.png");
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
@@ -307,6 +318,8 @@ void tst_Screenshots::animation()
     // Chapter 3.
     projectPath = QDir(tempProjectDir->path()).absoluteFilePath(projectFileNames.at(2));
     QVERIFY2(loadProject(QUrl::fromLocalFile(projectPath)), failureMessage);
+
+    QVERIFY2(togglePanels(panelsToExpand, true), failureMessage);
 
     screenshotPath = QLatin1String("slate-animation-tutorial-3.png");
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));

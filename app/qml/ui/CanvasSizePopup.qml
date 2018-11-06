@@ -36,11 +36,9 @@ Dialog {
     readonly property bool isTilesetProject: project && project.type === Project.TilesetType
 
     onAboutToShow: {
-        print("aboutToShoow")
         if (project) {
             widthSpinBox.value = project.size.width
             heightSpinBox.value = project.size.height
-            print("forcing focus")
             widthSpinBox.contentItem.forceActiveFocus()
         }
     }

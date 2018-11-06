@@ -39,8 +39,8 @@ ApplicationWindow {
         : ""
     visible: true
 
-    onActiveFocusItemChanged: print("active focus: " + activeFocusItem + ", parent: "
-        + (activeFocusItem ? activeFocusItem.parent : null))
+//    onActiveFocusItemChanged: print("active focus: " + activeFocusItem + ", parent: "
+//        + (activeFocusItem ? activeFocusItem.parent : null))
 
     property Project project: projectManager.project
     property int projectType: project && projectManager.ready ? project.type : 0

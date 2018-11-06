@@ -299,7 +299,6 @@ bool TestHelper::changeCanvasSize(int width, int height, CloseDialogFlag closeDi
     VERIFY(heightSpinBox->setProperty("value", originalHeightSpinBoxValue - 1));
     VERIFY(heightSpinBox->property("value").toInt() == originalHeightSpinBoxValue - 1);
 
-    qDebug() << "cancelling via test";
     QQuickItem *cancelButton = canvasSizePopup->findChild<QQuickItem*>("canvasSizePopupCancelButton");
     VERIFY(cancelButton);
     mouseEventOnCentre(cancelButton, MouseClick);
@@ -308,7 +307,6 @@ bool TestHelper::changeCanvasSize(int width, int height, CloseDialogFlag closeDi
     VERIFY(project->size().height() == originalHeightSpinBoxValue);
     VERIFY(canvas->hasActiveFocus());
 
-    qDebug() << "opening via test";
     // Open the popup again.
     mouseEventOnCentre(canvasSizeButton, MouseClick);
     VERIFY(canvasSizePopup);
