@@ -30,7 +30,7 @@ We're going to recreate the following guides:
 
 To drag a vertical guide onto the canvas, click on the ruler on the left side of the screen and drag outwards. Repeat this step until there are five vertical guides on the canvas at 36 pixel intervals. Then, drag a horizontal guide onto the canvas so that we have some reference for vertical movement in our animation.
 
-Now we'll set up the animation. To enable animation playback for a project, select Animation > Animation Playback. The Animation panel will then become visible. Click on the settings icon in the top right of the panel to open the animation settings dialog. Input the following values:
+Now we'll set up the animation. To enable animation playback for a project, open the Animation menu and check "Animation Playback". The Animation panel will then become visible. Click on the settings icon in the top right of the panel to open the animation settings dialog. Input the following values:
 
 ![Guides](https://github.com/mitchcurtis/slate/blob/animation-tutorial/doc/images/slate-animation-tutorial-3.png)
 
