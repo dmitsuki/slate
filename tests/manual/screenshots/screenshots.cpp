@@ -300,7 +300,7 @@ void tst_Screenshots::animation()
     QQuickItem *canvasSizeButton = window->findChild<QQuickItem*>("canvasSizeButton");
     QVERIFY(canvasSizeButton);
     // Can't seem to ensure that the tooltip is hidden using QQmlProperty, so we do it all hacky-like for now.
-    QTest::qWait(500);
+//    QTest::qWait(500);
 
     QVERIFY2(triggerCloseProject(), failureMessage);
 
@@ -311,6 +311,29 @@ void tst_Screenshots::animation()
     QVERIFY2(togglePanels(panelsToExpand, true), failureMessage);
 
     screenshotPath = QLatin1String("slate-animation-tutorial-2.png");
+    QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
+
+    // Select the background layer and fill it.
+    QVERIFY2(selectLayer("background", 2), failureMessage);
+    QVERIFY2(switchTool(TileCanvas::FillTool), failureMessage);
+    setCursorPosInScenePixels(QPoint(project->widthInPixels() - 1, 0));
+    canvas->setPenForegroundColour(Qt::white);
+    QTest::mouseClick(window, Qt::LeftButton, Qt::NoModifier, cursorWindowPos);
+
+    screenshotPath = QLatin1String("slate-animation-tutorial-2.1.png");
+    QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
+
+    // Turn on rulers and drag some guides out.
+    QVERIFY2(triggerRulersVisible(), failureMessage);
+    QCOMPARE(app.settings()->areRulersVisible(), true);
+
+    for (int i = 1; i <= 5; ++i) {
+//    for (int i = 4; i <= 4; ++i) {
+        QVERIFY2(addNewGuide(Qt::Vertical, i * 36), qPrintable(
+            QString::fromLatin1("When dragging guide %1: ").arg(i) + QString::fromLatin1(failureMessage)));
+    }
+
+    screenshotPath = QLatin1String("slate-animation-tutorial-2.2.png");
     QVERIFY(window->grabWindow().save(mOutputDirectory.absoluteFilePath(screenshotPath)));
 
     QVERIFY2(triggerCloseProject(), failureMessage);

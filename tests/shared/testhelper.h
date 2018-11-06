@@ -230,6 +230,8 @@ protected:
     Q_REQUIRED_RESULT bool renameSwatchColour(int index, const QString &name);
     Q_REQUIRED_RESULT bool deleteSwatchColour(int index);
 
+    Q_REQUIRED_RESULT bool addNewGuide(Qt::Orientation orientation, int position);
+
     QByteArray failureMessage;
 
     Application app;

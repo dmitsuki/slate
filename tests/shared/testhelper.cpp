@@ -857,6 +857,68 @@ bool TestHelper::deleteSwatchColour(int index)
     return true;
 }
 
+bool TestHelper::addNewGuide(Qt::Orientation orientation, int position)
+{
+    if (!app.settings()->areRulersVisible()) {
+        if (!triggerRulersVisible())
+            return false;
+        VERIFY(app.settings()->areRulersVisible());
+    }
+
+    const bool horizontal = orientation == Qt::Horizontal;
+    const int originalGuideCount = project->guides().size();
+    const int newGuideIndex = originalGuideCount;
+    const QPoint originalOffset = canvas->currentPane()->integerOffset();
+    const qreal originalZoomLevel = canvas->currentPane()->zoomLevel();
+
+    QQuickItem *ruler = canvas->findChild<QQuickItem*>(horizontal
+        ? "firstHorizontalRuler" : "firstVerticalRuler");
+    VERIFY(ruler);
+    const qreal rulerThickness = horizontal ? ruler->height() : ruler->width();
+
+    // Pan so that the top left of the canvas is at the rulers' corners.
+    if (!panTopLeftTo(rulerThickness, rulerThickness))
+        return false;
+
+    canvas->currentPane()->setZoomLevel(1.0);
+
+    // Drop a horizontal guide onto the canvas.
+    const QPoint pressPos(
+        horizontal ? 50 : rulerThickness / 2,
+        horizontal ? rulerThickness / 2 : 50);
+    setCursorPosInPixels(pressPos);
+    QTest::mouseMove(window, cursorWindowPos);
+    VERIFY(!canvas->pressedRuler());
+QTest::qWait(1000);
+    QTest::mousePress(window, Qt::LeftButton, Qt::NoModifier, cursorWindowPos);
+    VERIFY(canvas->pressedRuler());
+QTest::qWait(1000);
+    // Do the actual moving onto the canvas.
+    const QPoint releasePos(
+        horizontal ? 50 : rulerThickness + position,
+        horizontal ? rulerThickness + position : 50);
+    setCursorPosInPixels(releasePos);
+    QTest::mouseMove(window, cursorWindowPos);
+QTest::qWait(1000);
+    // Now it should be visible on the canvas.
+    VERIFY(imageGrabber.requestImage(canvas));
+    TRY_VERIFY(imageGrabber.isReady());
+    const QImage grabWithGuide = imageGrabber.takeImage();
+    VERIFY(grabWithGuide.pixelColor(releasePos.x(), releasePos.y()) == QColor(Qt::cyan));
+
+    QTest::mouseRelease(window, Qt::LeftButton, Qt::NoModifier, cursorWindowPos);
+QTest::qWait(1000);
+    VERIFY(!canvas->pressedRuler());
+    VERIFY2(project->guides().size() == originalGuideCount + 1, qPrintable(QString::fromLatin1(
+        "Expected %1 guide(s), but got %2").arg(originalGuideCount + 1).arg(project->guides().size())));
+    VERIFY(project->guides().at(newGuideIndex).position() == position);
+    VERIFY(project->undoStack()->canUndo());
+
+    canvas->currentPane()->setOffset(originalOffset);
+    canvas->currentPane()->setZoomLevel(originalZoomLevel);
+    return true;
+}
+
 QObject *TestHelper::findPopupFromTypeName(const QString &typeName) const
 {
     QObject *popup = nullptr;
@@ -1997,7 +2059,8 @@ bool TestHelper::panBy(int xDistance, int yDistance)
     const QPoint expectedOffset = originalOffset + QPoint(xDistance, yDistance);
 
     QTest::keyPress(window, Qt::Key_Space);
-    VERIFY(window->cursor().shape() == Qt::OpenHandCursor);
+    VERIFY2(window->cursor().shape() == Qt::OpenHandCursor, qPrintable(QString::fromLatin1(
+        "Expected Qt::OpenHandCursor after Qt::Key_Space press, but got %1").arg(window->cursor().shape())));
     VERIFY(canvas->currentPane()->integerOffset() == originalOffset);
     //        VERIFY(imageGrabber.requestImage(canvas));
     //        QTRY_VERIFY(imageGrabber.isReady());
@@ -2007,7 +2070,8 @@ bool TestHelper::panBy(int xDistance, int yDistance)
     //        QImage lastImage = currentImage;
 
     QTest::mousePress(window, Qt::LeftButton, Qt::NoModifier, pressPos);
-    VERIFY(window->cursor().shape() == Qt::ClosedHandCursor);
+    VERIFY2(window->cursor().shape() == Qt::ClosedHandCursor, qPrintable(QString::fromLatin1(
+        "Expected Qt::ClosedHandCursor after mouse press, but got %1").arg(window->cursor().shape())));
     VERIFY(canvas->currentPane()->integerOffset() == originalOffset);
     //        VERIFY(imageGrabber.requestImage(canvas));
     //        QTRY_VERIFY(imageGrabber.isReady());
@@ -2017,7 +2081,8 @@ bool TestHelper::panBy(int xDistance, int yDistance)
     //        lastImage = currentImage;
 
     QTest::mouseMove(window, pressPos + QPoint(xDistance, yDistance));
-    VERIFY(window->cursor().shape() == Qt::ClosedHandCursor);
+    VERIFY2(window->cursor().shape() == Qt::ClosedHandCursor, qPrintable(QString::fromLatin1(
+        "Expected Qt::ClosedHandCursor after mouse move, but got %1").arg(window->cursor().shape())));
     VERIFY(canvas->currentPane()->integerOffset() == expectedOffset);
     //        VERIFY(imageGrabber.requestImage(canvas));
     //        // Pane offset changed.
@@ -2026,13 +2091,18 @@ bool TestHelper::panBy(int xDistance, int yDistance)
     //        lastImage = currentImage;
 
     QTest::mouseRelease(window, Qt::LeftButton, Qt::NoModifier, pressPos + QPoint(xDistance, yDistance));
-    VERIFY(window->cursor().shape() == Qt::OpenHandCursor);
+    VERIFY2(window->cursor().shape() == Qt::OpenHandCursor, qPrintable(QString::fromLatin1(
+        "Expected Qt::ClosedHandCursor after mouse release, but got %1").arg(window->cursor().shape())));
     VERIFY(canvas->currentPane()->integerOffset() == expectedOffset);
 
     QTest::keyRelease(window, Qt::Key_Space);
     // If we have a selection, the cursor might not be Qt::BlankCursor, and that's OK.
-    if (!canvas->hasSelection())
-        VERIFY(window->cursor().shape() == Qt::BlankCursor);
+    if (!canvas->hasSelection()) {
+        // Move the mouse away from any guides, etc.
+        QTest::mouseMove(window, QPoint(0, 0));
+        VERIFY2(window->cursor().shape() == Qt::BlankCursor, qPrintable(QString::fromLatin1(
+            "Expected Qt::BlankCursor after Qt::Key_Space release, but got %1").arg(window->cursor().shape())));
+    }
     VERIFY(canvas->currentPane()->integerOffset() == expectedOffset);
 
     return true;

@@ -10,4 +10,10 @@ The initial project can be downloaded [here](https://github.com/mitchcurtis/slat
 
 We want to have 6 frames in our animation, so we need to increase the size of the canvas. To do so, open the Change Canvas Size dialog by clicking on the tool button in the left-hand side of the toolbar:
 
-![Change Canvas Size](https://github.com/mitchcurtis/slate/blob/master/doc/images/slate-animation-tutorial-1.png)
+![Change Canvas Size](https://github.com/mitchcurtis/slate/blob/master/doc/images/slate-animation-tutorial-1.1.png)
+
+Change the width of the image to 216 pixels and click OK to confirm. Now you should see this:
+
+![Change Canvas Size](https://github.com/mitchcurtis/slate/blob/master/doc/images/slate-animation-tutorial-2.png)
+
+Let's make the transparent background white. Select the "background" layer in the Layers panel.
